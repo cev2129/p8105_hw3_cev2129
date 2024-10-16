@@ -8,7 +8,19 @@ date: "2024-10-16"
 
 ```
 
+Loading the Nhanes_covar.csv 
 ```{r}
 library(tidyverse)
+covar_df = read_csv(file = "nhanes_covar.csv", skip = 4, col_names = TRUE, na = c(".", "NA", ""))
+covar_df = drop_na(covar_df)
 ```
+Loading Nhanes_accel.csv 
+```{r}
+accel_df = read_csv(file = "nhanes_accel.csv")
+accel_df = drop_na(accel_df)
+```
+Joining the datasets
+```{r}
+nhanes_df = left_join(covar_df, accel_df, by = "SEQN", "age" > 21)
 
+```
