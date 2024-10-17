@@ -11,6 +11,8 @@ date: "2024-10-16"
 Loading the Nhanes_covar.csv 
 ```{r}
 library(tidyverse)
+library(dplyr)
+library(ggplot2)
 covar_df = read_csv(file = "nhanes_covar.csv", skip = 4, col_names = TRUE, na = c(".", "NA", ""))
 covar_df = drop_na(covar_df)
 ```
@@ -22,5 +24,25 @@ accel_df = drop_na(accel_df)
 Joining the datasets
 ```{r}
 nhanes_df = left_join(covar_df, accel_df, by = "SEQN", "age" > 21)
+nhanes_df = nhanes_df |>
+  mutate_all(as.character) 
 
 ```
+
+Create a reader friendly table for number of men and women in each education category, and 
+```{r}
+nhanes_df |> 
+  group_by(education, sex) |>      
+  count() |>                      
+  arrange(education)
+```
+create a visualization of the age distributions for men and women in each education category.
+```{r}
+nhanes_df = nhanes_df |>
+  mutate(sex= as.factor(sex), education = as.factor(education), age = as.numeric(age))
+
+ggplot(nhanes_df, aes(x= sex, y = age)) +   
+  geom_boxplot() +           
+  facet_wrap(~education)
+```
+
