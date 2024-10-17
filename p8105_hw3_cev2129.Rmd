@@ -8,6 +8,7 @@ date: "2024-10-16"
 
 ```
 
+#Question 2
 Loading the Nhanes_covar.csv 
 ```{r}
 library(tidyverse)
@@ -35,8 +36,11 @@ nhanes_df |>
   group_by(education, sex) |>      
   count() |>                      
   arrange(education)
+#This table shows how many people from each sex has completed each level of education. Education level is shown twice so that it can be separated by sex. 
 ```
-create a visualization of the age distributions for men and women in each education category.
+
+
+Create a visualization of the age distributions for men and women in each education category.
 ```{r}
 nhanes_df = nhanes_df |>
   mutate(sex= as.factor(sex), education = as.factor(education), age = as.numeric(age))
@@ -44,5 +48,32 @@ nhanes_df = nhanes_df |>
 ggplot(nhanes_df, aes(x= sex, y = age)) +   
   geom_boxplot() +           
   facet_wrap(~education)
+#This box plot is meant to show what the reader friendly table depicts, howver you can more clearly view the distribtion of each sex in each education level. 
 ```
 
+
+Using your tidied dataset, aggregate across minutes to create a total activity variable for each participant. Plot these total activities (y-axis) against age (x-axis); your plot should compare men to women and have separate panels for each education level. Include a trend line or a smooth to illustrate differences. Comment on your plot.
+```{r}
+nhanes_df <- nhanes_df |>
+  mutate(total_activity = rowSums(across(min1:min1440, ~ as.numeric(.)), na.rm = TRUE))
+
+ggplot(nhanes_df, aes(x = age, y = total_activity, color = sex)) + 
+  geom_point() + geom_smooth() +
+  facet_wrap(~ education)
+#These plots show the differences in physical activity throughtout the day between those of different sex and ages, separated by education. Each level of education has a downward trend, however, those in the highest level of education seem to have the least steep slope. 
+```
+
+
+Accelerometer data allows the inspection activity over the course of the day. Make a three-panel plot that shows the 24-hour activity time courses for each education level and use color to indicate sex. Describe in words any patterns or conclusions you can make based on this graph; including smooth trends may help identify differences.
+```{r}
+
+```
+
+
+#Question 3
+```{r}
+jan2020 = read_csv("Jan2020.csv")
+jan2024 = read_csv("Jan2024.csv")
+july2020 = read_csv("July2020.csv")
+july2024 = read_csv("July2024.csv")
+```
